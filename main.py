@@ -9,7 +9,9 @@ def argument_parser() -> int:
     if len(sys.argv) == 1:
         day: int = 1
     elif len(sys.argv) == 2:
-        day: int = int(sys.argv[1])
+        day: int = int(sys.argv[2])
+    elif len(sys.argv) == 3:
+        currency = sys.argv[3]
     else:
         raise Exception('Error! Too many parameters')
 
