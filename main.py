@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 import aiohttp
+import asyncio
+import platform
 import sys
 
 
@@ -15,7 +17,7 @@ def argument_parser() -> int:
 
 
 def day_to_view() -> int:
-    day = argument_parser()
+    day: int = argument_parser()
     if day >= 11:
         raise Exception("Error! Too many day's. Max 10 day's")
     return day
@@ -36,9 +38,9 @@ DATE: str = date_to_view()
 URL = "https://api.privatbank.ua/p24api/exchange_rates?date=" + DATE
 
 
-def main():
+async def main():
     with aiohttp.ClientSession() as session:
-        with session.get(DATE) as response:
+        with await session.get(URL) as response:
             print("Status:", response.status)
             print("Content-type:", response.headers['content-type'])
             print('Cookies: ', response.cookies)
@@ -47,9 +49,7 @@ def main():
             return result
 
 
-def print_hi(name):
-    print(f'Hi, {name}')
-
-
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    if platform.system() == 'Windows':
+        asyncio.get_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    asyncio.run(main())
