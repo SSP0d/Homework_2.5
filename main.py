@@ -1,21 +1,22 @@
 from datetime import datetime, timedelta
+from typing import Union
 import aiohttp
 import asyncio
 import platform
 import sys
 
 
-def argument_parser() -> int:
+def argument_parser() -> Union[int, str]:
     if len(sys.argv) == 0:
         arg: int = 1
     elif len(sys.argv) == 1:
         arg: int = int(sys.argv[1])
     elif len(sys.argv) == 2:
-        arg: int = int(sys.argv[2])
+        currency: str = int(sys.argv[2])
     else:
         raise Exception('Error! Too many parameters')
 
-    return arg
+    return arg, currency
 
 
 def days() -> int:
