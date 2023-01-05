@@ -5,25 +5,49 @@ import asyncio
 import platform
 import sys
 
+default_currency = ['EUR', 'USD']
 
-def argument_parser() -> Union[int, str]:
-    if len(sys.argv) == 0:
+
+def check_args(arg: int) -> int:
+    if 1 <= arg <= 10:
+        return arg
+    raise Exception("Error! Exchange rates are available only for the last 10 days")
+
+
+def argument_parser() -> int:
+    # No argument
+    if len(sys.argv) == 1:
         arg: int = 1
-    elif len(sys.argv) == 1:
+        return arg
+    # Only days
+    if len(sys.argv) == 2:
+        try:
+            arg: int = int(sys.argv[1])
+        except ValueError:
+        check_args(arg)
+    # Days & extra currency
+    if len(sys.argv) == 3:
+        try:
+            currency: str = int(sys.argv[2])
+        except ValueError:
+        default_currency.append(currency)
         arg: int = int(sys.argv[1])
-    elif len(sys.argv) == 2:
-        currency: str = int(sys.argv[2])
-    else:
-        raise Exception('Error! Too many parameters')
-
-    return arg, currency
+        check_args(arg)
+    raise Exception('Error! Too many parameters')
 
 
-def days() -> int:
-    day: int = argument_parser()
-    if day >= 11:
-        raise Exception("Error! Too many day's. Max 10 day's")
-    return day
+def days_to_view(days: int = None) -> list[str]:
+    today: datetime = datetime.today()
+    delta: int = argument_parser()
+
+    if delta > 1:
+        start = today - timedelta(delta)
+        total: list = []
+            while start < today:
+                start += timedelta(1)
+                total.append(start.strftime('%d.$m.%Y'))
+            return total
+    return [today.strftime('%d.$m.$Y')]
 
 
 def date_to_view() -> str:
