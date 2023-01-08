@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Union
 import aiohttp
 import asyncio
 import platform
@@ -24,15 +23,16 @@ def argument_parser() -> int:
         try:
             arg: int = int(sys.argv[1])
         except ValueError:
+            print('Error! Arg must be integer...')
         check_args(arg)
     # Days & extra currency
     if len(sys.argv) == 3:
         try:
             currency: str = int(sys.argv[2])
         except ValueError:
-        default_currency.append(currency)
-        arg: int = int(sys.argv[1])
-        check_args(arg)
+            default_currency.append(currency)
+            arg: int = int(sys.argv[1])
+            check_args(arg)
     raise Exception('Error! Too many parameters')
 
 
@@ -43,39 +43,37 @@ def days_to_view(days: int = None) -> list[str]:
     if delta > 1:
         start = today - timedelta(delta)
         total: list = []
-            while start < today:
-                start += timedelta(1)
-                total.append(start.strftime('%d.$m.%Y'))
-            return total
-    return [today.strftime('%d.$m.$Y')]
+        while start < today:
+            start += timedelta(1)
+            total.append(start.strftime('%d.$m.%Y'))
+        return total
+    return [today.strftime('%d.%m.%Y')]
+
+def link_generator(days: int = None) -> list[str]:
+    days_range = []
+    for day in days_to_view(days):
+        urls = f'https://api.privatbank.ua/p24api/exchange_rates?json&date={day}'
+        days_range.append(urls)
+    return days_range
 
 
-def date_to_view() -> str:
-    delta: int = days()
-    if delta == 1:
-        date: datetime = datetime.today()
-        return date.strftime('%d.%m.%Y')
-    else:
-        date = datetime.today() - timedelta(delta)
-
-    return date.strftime('%d.%m.%Y')
-
-
-DATE: str = date_to_view()
-URL = "https://api.privatbank.ua/p24api/exchange_rates?date=" + DATE
-
-
-async def main():
+async def exchange(days: int = None) -> list[dict]:
     result = []
-    with aiohttp.ClientSession() as session:
-        with await session.get(URL) as response:
-            print("Status:", response.status)
-            print(response.ok)
-            result.append(response.json())
+    for url in link_generator(days):
+        async with aiohttp.ClientSession() as session:
+            async with await session.get(url) as response:
+                res = await response.json()
+                date: str = result['date']
+                rates_day = {}
+                for el in res['exchangeRate']:
+                    if el['currency'] in default_currency:
+                        rates_day[el['currency']] = {'sale': el['saleRate'], 'purchase': el['purchaseRate']}
+                result.append({date: rates_day})
             return result
 
 
 if __name__ == '__main__':
     if platform.system() == 'Windows':
         asyncio.get_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+        rate = asyncio.run(exchange())
+        print(rate)

@@ -5,7 +5,16 @@ import names
 from websockets import WebSocketServerProtocol
 from websockets.exceptions import ConnectionClosedOK
 
-logging.basicConfig(level=logging.INFO)
+
+from main import exchange
+FORMAT = '%(name)s - %(levelname)s - %(message)s'
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename='chat.log',
+    filemode='w',
+    format=FORMAT
+)
 
 
 class Server:
@@ -33,9 +42,22 @@ class Server:
         finally:
             await self.unregister(ws)
 
+    async def currency_exchange(self, message, ):
+        if message == 'exchange':
+            rate = await exchange()
+            await self.send_to_clients(f"{'exchange'}: {rate}")
+            logging.info(f'Exchange rate for today')
+        if message.startswith('exchange') and message != 'exchange':
+            days: int = message[1]
+            rate = await exchange(days)
+            await self.senf_toclients(f"{'exchange'}: {rate}")
+            logging.info(f'Exchange rate for {days} day')
+
     async def distrubute(self, ws: WebSocketServerProtocol):
         async for message in ws:
-             await self.send_to_clients(f"{ws.name}: {message}")
+            await self.send_to_clients(f"{ws.name}: {message}")
+            if message.startswith('exchange'):
+                await self.send_exchange(message)
 
 
 async def main():
