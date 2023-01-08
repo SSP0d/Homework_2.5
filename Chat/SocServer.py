@@ -49,7 +49,7 @@ class Server:
         if message.startswith('exchange') and message != 'exchange':
             days: int = message[1]
             rate = await exchange(days)
-            await self.senf_toclients(f"{'exchange'}: {rate}")
+            await self.send_to_clients(f"{'exchange'}: {rate}")
             logging.info(f'Exchange rate for {days} day')
 
     async def distrubute(self, ws: WebSocketServerProtocol):
