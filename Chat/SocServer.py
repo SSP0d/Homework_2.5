@@ -5,7 +5,7 @@ import names
 from websockets import WebSocketServerProtocol
 from websockets.exceptions import ConnectionClosedOK
 
-from .currency_exchange import exchange
+from currency_exchange import exchange
 FORMAT = '%(name)s - %(levelname)s - %(message)s'
 
 logging.basicConfig(
@@ -56,7 +56,7 @@ class Server:
         async for message in ws:
             await self.send_to_clients(f"{ws.name}: {message}")
             if message.startswith('exchange'):
-                await self.send_exchange(message)
+                await self.send_currency_exchange(message)
 
 
 async def main():
