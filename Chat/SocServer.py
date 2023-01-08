@@ -5,8 +5,7 @@ import names
 from websockets import WebSocketServerProtocol
 from websockets.exceptions import ConnectionClosedOK
 
-
-from main import exchange
+from .currency_exchange import exchange
 FORMAT = '%(name)s - %(levelname)s - %(message)s'
 
 logging.basicConfig(
@@ -42,7 +41,7 @@ class Server:
         finally:
             await self.unregister(ws)
 
-    async def currency_exchange(self, message, ):
+    async def send_currency_exchange(self, message, ):
         if message == 'exchange':
             rate = await exchange()
             await self.send_to_clients(f"{'exchange'}: {rate}")
