@@ -1,11 +1,15 @@
 import asyncio
 import logging
+import sys
 import websockets
 import names
 from websockets import WebSocketServerProtocol
 from websockets.exceptions import ConnectionClosedOK
 
-from currency_exchange import exchange
+#sys.path[0] += r"\\Homework_2.5"
+
+
+from ..currency_exchange import exchange
 FORMAT = '%(name)s - %(levelname)s - %(message)s'
 
 logging.basicConfig(
