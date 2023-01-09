@@ -1,0 +1,6 @@
+websockets.server - INFO - server listening on [::1]:8080
+websockets.server - INFO - server listening on 127.0.0.1:8080
+websockets.server - INFO - connection failed (426 Upgrade Required)
+websockets.server - INFO - connection closed
+websockets.server - INFO - connection failed (426 Upgrade Required)
+websockets.server - INFO - connection closed
