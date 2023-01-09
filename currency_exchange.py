@@ -58,18 +58,18 @@ def link_generator(days: int = None) -> list[str]:
 
 
 async def exchange(days: int = None) -> list[dict]:
-    result = []
+    result_list = []
     for url in link_generator(days):
         async with aiohttp.ClientSession() as session:
-            async with await session.get(url) as response:
-                res = await response.json()
+            async with await session.get(url, ssl=False) as response:
+                result = await response.json()
                 date: str = result['date']
                 rates_day = {}
-                for el in res['exchangeRate']:
+                for el in result['exchangeRate']:
                     if el['currency'] in default_currency:
                         rates_day[el['currency']] = {'sale': el['saleRate'], 'purchase': el['purchaseRate']}
-                result.append({date: rates_day})
-            return result
+                result_list.append({date: rates_day})
+            return result_list
 
 
 if __name__ == '__main__':
