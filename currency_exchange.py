@@ -63,7 +63,7 @@ async def exchange(days: int = None) -> list[dict]:
         async with aiohttp.ClientSession() as session:
             async with await session.get(url) as response:
                 res = await response.json()
-                date: str = result['date']
+                date: str = res['date']
                 rates_day = {}
                 for el in res['exchangeRate']:
                     if el['currency'] in default_currency:
