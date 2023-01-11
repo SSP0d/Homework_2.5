@@ -6,3 +6,5 @@
 /.idea/vcs.xml
 .idea/dbnavigator.xml
 __pycache__/currency_exchange.cpython-310.pyc
+__pycache__/currency_exchange.cpython-310.pyc
+*.pyc
