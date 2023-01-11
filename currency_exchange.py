@@ -28,12 +28,11 @@ def argument_parser() -> int:
         return check_args(arg)
     # Days & extra currency
     if len(sys.argv) == 3:
-        try:
-            currency = int(sys.argv[2])
-        except ValueError:
-            default_currency.append(currency)
-            arg: int = int(sys.argv[1])
-            return check_args(arg)
+        currency = sys.argv[2]
+        default_currency.append(currency.upper())
+        arg: int = int(sys.argv[1])
+        return check_args(arg)
+    if len(sys.argv) > 3:
         raise Exception('Error! Too many parameters')
 
 
@@ -46,7 +45,7 @@ def days_to_view(days: int = None) -> list[str]:
         total: list = []
         while start < today:
             start += timedelta(1)
-            total.append(start.strftime('%d.$m.%Y'))
+            total.append(start.strftime('%d.%m.%Y'))
         return total
     return [today.strftime('%d.%m.%Y')]
 
@@ -71,7 +70,7 @@ async def exchange(days: int = None) -> list[dict]:
                     if el['currency'] in default_currency:
                         rates_day[el['currency']] = {'sale': el['saleRate'], 'purchase': el['purchaseRate']}
                 result_list.append({date: rates_day})
-            return result_list
+    return result_list
 
 
 if __name__ == '__main__':
