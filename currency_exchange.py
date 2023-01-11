@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
+
 import aiohttp
 import asyncio
 import platform
 import sys
 
-default_currency = ['EUR', 'USD']
+default_currency: list[str] = ['EUR', 'USD']
 
 
 def check_args(arg: int) -> int:
@@ -24,16 +25,16 @@ def argument_parser() -> int:
             arg: int = int(sys.argv[1])
         except ValueError:
             print('Error! Arg must be integer...')
-        check_args(arg)
+        return check_args(arg)
     # Days & extra currency
     if len(sys.argv) == 3:
         try:
-            currency: str = int(sys.argv[2])
+            currency = int(sys.argv[2])
         except ValueError:
             default_currency.append(currency)
             arg: int = int(sys.argv[1])
-            check_args(arg)
-    raise Exception('Error! Too many parameters')
+            return check_args(arg)
+        raise Exception('Error! Too many parameters')
 
 
 def days_to_view(days: int = None) -> list[str]:
@@ -48,6 +49,7 @@ def days_to_view(days: int = None) -> list[str]:
             total.append(start.strftime('%d.$m.%Y'))
         return total
     return [today.strftime('%d.%m.%Y')]
+
 
 def link_generator(days: int = None) -> list[str]:
     days_range = []
