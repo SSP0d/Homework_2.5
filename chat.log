@@ -1,6 +1,19 @@
-websockets.server - INFO - server listening on 127.0.0.1:8080
 websockets.server - INFO - server listening on [::1]:8080
-websockets.server - INFO - connection failed (426 Upgrade Required)
-websockets.server - INFO - connection closed
-websockets.server - INFO - connection failed (426 Upgrade Required)
+websockets.server - INFO - server listening on 127.0.0.1:8080
+websockets.server - INFO - connection open
+root - INFO - ('::1', 54205, 0, 0) connects
+root - INFO - ('::1', 54205, 0, 0) disconnects
+websockets.server - ERROR - connection handler failed
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/websockets/legacy/server.py", line 236, in handler
+    await self.ws_handler(self)
+  File "/Users/spod/Documents/GoIt/Homework_2.5/SocServer.py", line 39, in ws_handler
+    await self.distrubute(ws)
+  File "/Users/spod/Documents/GoIt/Homework_2.5/SocServer.py", line 60, in distrubute
+    await self.send_currency_exchange(message)
+  File "/Users/spod/Documents/GoIt/Homework_2.5/SocServer.py", line 47, in send_currency_exchange
+    rate = await exchange()
+  File "/Users/spod/Documents/GoIt/Homework_2.5/currency_exchange.py", line 67, in exchange
+    date: str = result['date']
+KeyError: 'date'
 websockets.server - INFO - connection closed
