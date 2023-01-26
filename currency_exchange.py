@@ -68,7 +68,7 @@ async def exchange(days: int = None) -> list[dict]:
                 rates_day = {}
                 for el in result['exchangeRate']:
                     if el['currency'] in default_currency:
-                        rates_day[el['currency']] = {'sale': el['saleRate'], 'purchase': el['purchaseRate']}
+                        rates_day[el['currency']] = {'sale': el['saleRateNB'], 'purchase': el['purchaseRateNB']}
                 result_list.append({date: rates_day})
     return result_list
 
